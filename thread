@@ -1,0 +1,16 @@
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        var runThread = Runnable {
+            for (m in 0..10){
+                var num = Math.random()
+                Log.d("Random Number","Random Number is $num")
+                Thread.sleep(2000)
+            }
+        }
+        var th = Thread(runThread)
+        th.start()
+    }
+}
