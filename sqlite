@@ -1,0 +1,125 @@
+MainActivity.kt
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        var id:Int=0
+
+        var my_database=MyDB(this)
+        button.setOnClickListener {
+            var un=username.text.toString()
+            var pass=password.text.toString()
+            my_database.saveUser(un,pass)
+        }
+
+        button2.setOnClickListener {
+            var userD = my_database.readUsers()
+            var adapt = ArrayAdapter(this,android.R.layout.simple_list_item_1,userD)
+
+            userList.adapter = adapt
+        }
+
+        userList.setOnItemClickListener { adapterView, view, i, l ->
+            var data = userList.getItemAtPosition(i).toString()[0]
+            id=data.digitToInt()
+            Toast.makeText(this,data.toString(),Toast.LENGTH_SHORT).show()
+        }
+
+        userList.setOnItemLongClickListener { adapterView, view, i, l ->
+            var del=userList.getItemAtPosition(i).toString()[0]
+            my_database.deleteUsers(del.digitToInt())
+           true
+       }
+
+        button3.setOnClickListener {
+            val un=username.text.toString()
+            val pass=password.text.toString()
+            val result = my_database.updateUsers(id,un, pass)
+
+    }
+}
+}
+
+
+
+MyDB.kt
+
+		class MyDB(var context: Context):SQLiteOpenHelper(context,"ricky",null,1) {
+    override fun onCreate(p0: SQLiteDatabase?) {
+        var createTable="create table users (id integer primary key autoincrement,username varchar (20),password varchar(10))"
+        p0?.execSQL(createTable)
+    }
+
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
+        TODO("Not yet implemented")
+    }
+    fun saveUser(username:String,password:String)
+    {
+        var db=this.writableDatabase
+        var cv=ContentValues()
+        cv.put("username",username)
+        cv.put("password",password)
+        var res=db.insert("users",null,cv)
+
+        if(res>0)
+        {
+            Toast.makeText(context,"User Created Successfully",Toast.LENGTH_SHORT).show()
+        }
+        else{
+            Toast.makeText(context,"Error",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun readUsers():ArrayList<String>
+    {
+        var userData = ArrayList<String>()
+        var db = this.readableDatabase
+        var rec = db.rawQuery("select * from users",null)
+
+        if (rec.moveToFirst())
+        {
+            do{
+                var data = rec.getString(0).toString()+" "+rec.getString(1).toString()+" "+rec.getString(2).toString()
+                userData.add(data)
+            }
+                while (rec.moveToNext())
+        }
+        return userData
+    }
+
+    fun deleteUsers(uid:Int): Boolean {
+        var db=this.writableDatabase
+        //Toast.makeText(context,"$uid",Toast.LENGTH_SHORT).show()
+        var res=db.delete("users","id="+uid,null)>0
+
+        if(res)
+        {
+            Toast.makeText(context,"User Removed successfully",Toast.LENGTH_SHORT).show()
+        }
+        else
+        {
+            Toast.makeText(context,"Error",Toast.LENGTH_SHORT).show()
+        }
+        return true
+    }
+
+    fun updateUsers(id:Int, newUsername: String,newPassword:String): Int {
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        cv.put("username",newUsername)
+        cv.put("password",newPassword)
+
+        val res = db.update("users", cv, "id="+id,null)
+
+        if (res > 0) {
+            Toast.makeText(context, "User updated successfully", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+        }
+
+        return res
+        }
+}
