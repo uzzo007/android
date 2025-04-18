@@ -1,0 +1,32 @@
+MainActivity.kt
+		
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        button.setOnClickListener {
+            var  ms = Intent(this,MyMusicService::class.java)
+            startService(ms)
+        }
+
+    }
+}
+
+     MyMusicService.kt
+	
+class MyMusicService: Service()  {
+    private lateinit var mediaController: MediaPlayer
+    override fun onBind(p0: Intent?): IBinder? {
+        TODO("Not yet implemented")
+    }
+    override fun onCreate() {
+        super.onCreate()
+        mediaController = MediaPlayer.create(this, R.raw.song)
+        mediaController.start()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaController.stop()
+        Toast.makeText(this, "Service End", Toast.LENGTH_LONG).show()
+    }
+}
