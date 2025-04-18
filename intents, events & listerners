@@ -1,0 +1,59 @@
+A] The Android Event Listener
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        button.setOnClickListener {
+            var data=user_data.text.toString()
+            var compose= Intent(Intent.ACTION_SEND)
+            compose.putExtra(Intent.EXTRA_TEXT,data)
+            compose.type="text/plain"
+
+            var sendOptions=Intent.createChooser(compose,"MSG")
+            startActivity(sendOptions)
+        }
+    }
+}
+
+
+B] Event and Event Listener
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        //on click
+        button.setOnClickListener {
+            textView.text="Button Click !!!";
+        }
+
+        //on long click
+        button.setOnLongClickListener {
+            textView.text="Button Long Click !!!";
+            true
+        }
+
+        //touch listener
+        imageView.setOnTouchListener { view, motionEvent ->
+            when(motionEvent.action){
+                MotionEvent.ACTION_DOWN-> textView.text="Finger Touch";
+                MotionEvent.ACTION_UP ->textView.text="Finger Up";
+                MotionEvent.ACTION_POINTER_DOWN -> textView.text="Multi Finger Touch";
+            }
+            true
+        }
+        tb.setOnKeyListener { view, i, keyEvent ->
+
+            if (i==KeyEvent.KEYCODE_ENTER)
+            {
+                textView.text="Enter Key Press";
+            }
+            true
+        }
+    }
+}
+
+
