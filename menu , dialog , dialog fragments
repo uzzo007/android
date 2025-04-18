@@ -1,0 +1,145 @@
+MainActivity.kt
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        //custom dialog
+        button2.setOnClickListener {
+            var MyDialogClass=CustomClass()
+            MyDialogClass.show(supportFragmentManager,"MyDialog")
+        }
+
+        //on button press menu
+        btn.setOnClickListener {
+        	var mymenu=PopupMenu(this,btn)
+        	menuInflater.inflate(R.menu.mymenu,mymenu.menu)
+            mymenu.show()
+
+   	mymenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener 
+{
+                it->
+                if (it.itemId==R.id.one)
+                {
+                    home.setBackgroundColor(Color.GREEN)
+                }
+                if (it.itemId==R.id.two)
+                {
+                    Toast.makeText(this,"Button Menu",Toast.LENGTH_SHORT).show()
+                }
+                if (it.itemId==R.id.three)
+                {
+                    System.exit(0)
+                }
+                true
+            })
+      }
+
+     }
+
+    //on back press dialog
+    override fun onBackPressed() {
+        var my_dialog= AlertDialog.Builder(this)
+        my_dialog.setTitle("Exit")
+        my_dialog.setMessage("Do you want to close application ? ")
+        my_dialog.setPositiveButton("Yes")
+        {
+                my_dialog,it->
+            System.exit(0)
+        }
+        my_dialog.setNegativeButton("No")
+        {
+                my_dialog,it->
+            Toast.makeText(this,"No Change",Toast.LENGTH_SHORT).show()
+        }
+        my_dialog.create()
+        my_dialog.show()
+    }
+
+
+    //Simple menu
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.mymenu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId==R.id.one)
+        {
+            home.setBackgroundColor(Color.YELLOW)
+        }
+        if (item.itemId==R.id.two)
+        {
+            Toast.makeText(this,"3 Dot Menu",Toast.LENGTH_SHORT).show()
+        }
+        if (item.itemId==R.id.three)
+        {
+            System.exit(0)
+        }
+        return true
+    }
+}
+
+Mymenu.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/sub_menu"
+        android:title="Main Menu">
+        <menu>
+            <item
+                android:id="@+id/one"
+                android:title="Change Background Color" />
+            <item
+                android:id="@+id/two"
+                android:title="Toast" />
+            <item
+                android:id="@+id/three"
+                android:title="Exit" />
+        </menu>
+    </item>
+</menu>
+
+	CustomClass.kt
+
+	class CustomClass:DialogFragment() {
+    		override fun onCreateView(
+        		inflater: LayoutInflater,
+        		container: ViewGroup?,
+        		savedInstanceState: Bundle?
+   	 	): View? {
+        			var root=inflater.inflate(R.layout.custom_dialog,container)
+        			root.button3.setOnClickListener {
+            			var data=root.c_textbox.text.toString()
+            			Toast.makeText(context,data,Toast.LENGTH_SHORT).show() 
+}
+       		 return root
+    		}
+}
+     	
+
+
+
+CustomClass.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/c_textbox"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/c_textbox"
+        android:layout_alignEnd="@+id/c_textbox"
+        android:text="Button" />
+</RelativeLayout>
