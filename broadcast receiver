@@ -1,0 +1,29 @@
+MainActivity.kt
+
+class MainActivity : AppCompatActivity() {
+    lateinit var checker: AirplaneMode
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        checker = AirplaneMode()
+        IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED).also {
+            registerReceiver(checker,it)
+        }
+    }
+}
+
+     Airplane_mode.kt
+
+class AirplaneMode:BroadcastReceiver(){
+    override fun onReceive(p0: Context?, p1: Intent?) {
+        var checkStatus=p1?.getBooleanExtra("state",false) ?:return
+
+        if (checkStatus)
+        {
+            Toast.makeText(p0,"Airplane Mode is ON",Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(p0,"Airplane Mode is OFF",Toast.LENGTH_SHORT).show()
+        }
+    }
+}
